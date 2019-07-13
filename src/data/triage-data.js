@@ -219,7 +219,7 @@ export const responseData = {
             "contentType": "application/xml",
             "destination": "NavigatorServiceJob;0",
             "status": {
-              "code": 0
+              "code": 1
             },
             "correlationId": "b7f947eb-4425-4b15-af79-ee3a91d08fba",
             "operation": "navigator_getHospitalById"
@@ -265,7 +265,7 @@ export const responseData = {
                 "contentType": "application/xml",
                 "destination": "NavigatorServiceJob;0",
                 "status": {
-                  "code": 0
+                  "code": 1
                 },
                 "correlationId": "b7f947eb-4425-4b15-af79-ee3a91d08fba",
                 "operation": "navigator_getHospitalById"

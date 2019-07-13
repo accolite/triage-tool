@@ -43,7 +43,7 @@ class TreeView extends Component {
     }
 
     drawChart = treeData => {
-        const margin = { top: 20, right: 120, bottom: 20, left: 120 },
+        const margin = { top: 20, right: 120, bottom: 20, left: 200 },
             width = 960 - margin.right - margin.left,
             height = 500 - margin.top - margin.bottom;
 
@@ -66,7 +66,9 @@ class TreeView extends Component {
         root = treeData[0];
         root.x0 = height / 2;
         root.y0 = 0;
-
+        var div = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 1e-6);
         update(root);
 
         // d3.select(self.frameElement).style("height", "500px");
@@ -88,17 +90,20 @@ class TreeView extends Component {
             var nodeEnter = node.enter().append("g")
                 .attr("class", "node")
                 .attr("transform", function (d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-                .on("click", click);
-
+                .on("click", click)
+                .on("mouseover", mouseover)
+                .on("mousemove", function(d){mousemove(d);})
+                .on("mouseout", mouseout)
             nodeEnter.append("circle")
                 .attr("r", 1e-6)
-                .style("fill", function (d) { return d._children ? "lightsteelblue" : "#fff"; });
+                .style("fill", d => d._children ? "lightsteelblue" : "#fff")
+                .style("stroke", d => d.replyMessage.status.code === 0 ? "#00ff00": "#ff0000");
 
             nodeEnter.append("text")
                 .attr("x", function (d) { return d.children || d._children ? -13 : 13; })
                 .attr("dy", ".35em")
                 .attr("text-anchor", function (d) { return d.children || d._children ? "end" : "start"; })
-                .text(function (d) { return d.name; })
+                .text(function (d) { return d.requestMessage.operation; })
                 .style("fill-opacity", 1e-6);
 
             // Transition nodes to their new position.
@@ -170,7 +175,36 @@ class TreeView extends Component {
             update(d);
         }
 
+        function mouseover() {
+            div.transition()
+            .duration(300)
+            .style("opacity", 1);
+        }
 
+        function mousemove(d) {
+            const { operation, timestamp: requestTimestamp } = d.requestMessage;
+            const { status, timestamp: replyTimestamp } = d.replyMessage;
+            let html = "<table><thead></thead><tbody>";
+            const props = [
+                { name: "Operation", value: operation }, 
+                { name: "Status", value: status.code },
+                { name: "Request Timestamp", value: requestTimestamp },
+                { name: "Response Timestamp", value: replyTimestamp }];
+            props.forEach(prop => {
+                html += "<tr><td>" + prop.name + "</td><td>" + prop.value + "</td></tr>"
+            })
+            html += "</tbody></table>";
+            div
+            .html(html)
+            .style("left", (d3.event.pageX ) + "px")
+            .style("top", (d3.event.pageY) + "px");
+        }
+
+        function mouseout() {
+            div.transition()
+            .duration(300)
+            .style("opacity", 1e-6);
+        }
     }
 
     render() {
