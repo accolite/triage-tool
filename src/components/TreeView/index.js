@@ -3,38 +3,46 @@ import * as d3 from "d3";
 import "./style.css";
 
 class TreeView extends Component {
+
     componentDidMount() {
-        this.drawChart();
+        this.drawChart(this.buildData());
     }
 
-    drawChart() {
-
-        const treeData = [
-            {
-                "name": "Top Level",
-                "parent": "null",
-                "children": [
-                    {
-                        "name": "Level 2: A",
-                        "parent": "Top Level",
-                        "children": [
-                            {
-                                "name": "Son of A",
-                                "parent": "Level 2: A"
-                            },
-                            {
-                                "name": "Daughter of A",
-                                "parent": "Level 2: A"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Level 2: B",
-                        "parent": "Top Level"
-                    }
-                ]
+    buildData = () => {
+        const { data } = this.props; 
+        let nodes = [];
+        const root = {};
+        nodes.push(data);
+        const nameToNode = {};
+        let outputRootNode = null;
+        while (nodes.length > 0) {
+            const node = nodes.pop();
+            if (node.childMessages && node.childMessages.length > 0) {
+                nodes = nodes.concat(node.childMessages.map(child => ({...child, parent: node})));
             }
-        ];
+            const parent = node.parent ? node.parent.requestMessage.msgId: null;
+            const outputNode = {
+                name: node.requestMessage.msgId,
+                parent,
+                requestMessage: node.requestMessage,
+                replyMessage: node.replyMessage,
+                children: [],
+            };
+            if (outputRootNode === null) {
+                outputRootNode = outputNode;
+            }
+            nameToNode[outputNode.name] = outputNode;
+            if (parent !== null) {
+                const outputNodeParent = nameToNode[parent];
+                if (outputNodeParent) {
+                    outputNodeParent.children.push(outputNode);
+                }
+            }
+        }
+        return [outputRootNode];
+    }
+
+    drawChart = treeData => {
         const margin = { top: 20, right: 120, bottom: 20, left: 120 },
             width = 960 - margin.right - margin.left,
             height = 500 - margin.top - margin.bottom;

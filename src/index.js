@@ -1,6 +1,7 @@
 import React from "react";
 import { render } from "react-dom";
-import { makeData } from "./Utils";
+// import { makeData } from "./Utils";
+import { makeData } from "./data/triage-data";
 import matchSorter from "match-sorter";
 import ReactJson from 'react-json-view'
 import TreeView from './components/TreeView';
@@ -15,7 +16,7 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      data: makeData().updateCustomer,
+      data: makeData(),
     };
   }
   render() {
@@ -97,7 +98,7 @@ class App extends React.Component {
           ]}
           defaultPageSize={10}
           className="-striped -highlight"
-          SubComponent= {(row) => <TreeView/>}
+          SubComponent= {row => <TreeView data={row.original}/>}
           // {(row) =>
           //   <div className="main-container">
           //     <div className="left-container">
