@@ -3,8 +3,8 @@ import { render } from "react-dom";
 // import { makeData } from "./Utils";
 import { makeData } from "./data/triage-data";
 import matchSorter from "match-sorter";
-import ReactJson from 'react-json-view'
 import TreeView from './components/TreeView';
+import ReqResViewer from './components/ReqResViewer';
 import MonitorForm from './MonitorForm';
 // Import React Table
 import ReactTable from "react-table";
@@ -12,17 +12,36 @@ import "react-table/react-table.css";
 import { width } from "window-size";
 import './style.css';
 
+
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
       data: makeData(),
+      showReqRes: false,
+      selectedNodeData: {},
     };
   }
+  onClickNode = ( nodeData ) => {
+    this.setState({
+      showReqRes: true,
+      selectedNodeData: nodeData,
+    });
+  }
+  handleOnCloseReqResViewer = () => {
+    this.setState({
+      showReqRes: false,
+    });
+  }
   render() {
-    const { data } = this.state;
+    const { data, showReqRes, selectedNodeData } = this.state;
     return (
       <div>
+        <ReqResViewer
+          visible={showReqRes}
+          handleOnClose={this.handleOnCloseReqResViewer}
+          data={selectedNodeData}
+        />
         <MonitorForm/>
         <ReactTable
           data={data}
@@ -98,26 +117,7 @@ class App extends React.Component {
           ]}
           defaultPageSize={10}
           className="-striped -highlight"
-          SubComponent= {row => <TreeView data={row.original}/>}
-          // {(row) =>
-          //   <div className="main-container">
-          //     <div className="left-container">
-          //       <ReactJson src={data[row.index].requestMessage}
-          //         name={false}
-          //         theme={"ocean"}
-          //         enableClipboard={false}
-          //         displayDataTypes={false}
-          //       />
-          //     </div>
-          //     <div className="right-container">
-          //      <ReactJson src={data[row.index].replyMessage}
-          //         name={false}
-          //         theme={"ocean"}
-          //         enableClipboard={false}
-          //         displayDataTypes={false}
-          //       />
-          //     </div>
-          //   </div>}
+          SubComponent= {(row) => <TreeView data={row.original} onClickNode={this.onClickNode}/>}
         />
       </div>
     );

@@ -43,6 +43,7 @@ class TreeView extends Component {
     }
 
     drawChart = treeData => {
+        const { onClickNode } = this.props;
         const margin = { top: 20, right: 120, bottom: 20, left: 200 },
             width = 960 - margin.right - margin.left,
             height = 500 - margin.top - margin.bottom;
@@ -165,14 +166,16 @@ class TreeView extends Component {
 
         // Toggle children on click.
         function click(d) {
-            if (d.children) {
-                d._children = d.children;
-                d.children = null;
-            } else {
-                d.children = d._children;
-                d._children = null;
-            }
-            update(d);
+            
+            // if (d.children) {
+            //     d._children = d.children;
+            //     d.children = null;
+            // } else {
+            //     d.children = d._children;
+            //     d._children = null;
+            // }
+            // update(d);
+            onClickNode(d);
         }
 
         function mouseover() {
