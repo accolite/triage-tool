@@ -175,6 +175,7 @@ class TreeView extends Component {
             //     d._children = null;
             // }
             // update(d);
+            hideTooltip(d);
             onClickNode(d);
         }
 
@@ -202,11 +203,13 @@ class TreeView extends Component {
             .style("left", (d3.event.pageX ) + "px")
             .style("top", (d3.event.pageY) + "px");
         }
-
-        function mouseout() {
+        function hideTooltip() {
             div.transition()
             .duration(300)
             .style("opacity", 1e-6);
+        }
+        function mouseout() {
+            hideTooltip();
         }
     }
 
