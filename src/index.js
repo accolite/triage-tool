@@ -32,10 +32,11 @@ class App extends React.Component {
           }
           columns={[
             {
-              Header: "Message Id",
-              accessor: "msgId",
+              Header: "Operation",
+              accessor: "operationName",
               filterMethod: (filter, row) =>
-                row[filter.id].includes(filter.value)            },
+                row[filter.id].includes(filter.value)
+            },
             {
               Header: "Request Timestamp",
               id: "timestamprew",
