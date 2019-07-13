@@ -12,6 +12,7 @@
     "react": "15.5.3",
     "react-dom": "15.5.3",
     "react-json-view": "^1.19.1",
+    "react-modal": "^3.8.2",
     "react-table": "6.5.3"
   },
   "devDependencies": {
