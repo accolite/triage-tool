@@ -10,18 +10,55 @@ import MonitorForm from './MonitorForm';
 import ReactTable from "react-table";
 import "react-table/react-table.css";
 import { width } from "window-size";
-import './style.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./style.css";
 
+import { pathOr, values } from "ramda";
 
+import { SocketHandlerFactory } from "./services/SocketService";
+
+let loginResponse;
+
+const makeStoreHelper = () => {
+  return {
+    dispatch(action) {
+    },
+    getRefreshToken() {
+      return pathOr("", ["refresh_token"], loginResponse);
+    },
+
+    getAccessToken() {
+      return pathOr("", ["access_token"], loginResponse);
+    },
+
+    updateToken() {
+    },
+
+    logOut() {
+    },
+  };
+};
+
+const socketObject = SocketHandlerFactory(
+  null,
+  makeStoreHelper(),
+  {
+    PRU_API_URL: "wss://ws-apiuat.prudential.com.my/ws",
+    PRU_API_KEY: "a3b0c44298fc1c149afbf4c8996fb92427ac41e4649b934ca495991b7852b855",
+  }
+);
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      data: makeData(),
+      // data: makeData(),
+      data: [],
       showReqRes: false,
       selectedNodeData: {},
     };
   }
+  notify = msg => toast(msg);
   onClickNode = ( nodeData ) => {
     this.setState({
       showReqRes: true,
@@ -33,6 +70,42 @@ class App extends React.Component {
       showReqRes: false,
     });
   }
+  doSearch = async event => {
+    //make websocket call here
+    const accessToken = pathOr("", ["access_token"], loginResponse);
+    const payload = {
+      "operation": this.state.operation,
+      "access_token": accessToken,
+      "body": {   
+        "name": "monitor",
+        "owner": this.state.owner,
+        "priority": 10,
+      }
+    };
+    const searchResponse = await socketObject.sendData(payload);
+    const { status, body } = searchResponse;
+    if (status.code === 0) {
+      this.setState({
+        data: values(body)
+      });
+    } else {
+      this.setState({
+        data: []
+      });
+      this.notify("Could not get response. Please make sure you have clicked on the login button.");
+    }
+  }
+  doLogin = async event => {
+    //make websocket call here
+    const payload = {
+      "operation":"login",
+      "body":{
+        "loginId": "shailendra@yopmail.com",
+        "password": "Password@123"
+      }
+    }
+    loginResponse = await socketObject.sendData(payload);
+  };
   render() {
     const { data, showReqRes, selectedNodeData } = this.state;
     return (
@@ -42,7 +115,10 @@ class App extends React.Component {
           handleOnClose={this.handleOnCloseReqResViewer}
           data={selectedNodeData}
         />
-        <MonitorForm/>
+        <MonitorForm
+            doLogin={this.doLogin}
+            doSearch={this.doSearch}
+        />
         <ReactTable
           data={data}
           filterable

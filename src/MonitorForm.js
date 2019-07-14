@@ -1,6 +1,6 @@
 import React from "react";
 
-
+//call api
 export default class MonitorForm extends React.Component {
 
   constructor(props){
@@ -14,12 +14,7 @@ export default class MonitorForm extends React.Component {
   handleChangeOperation = event => {
     this.setState({ operation: event.target.value });
   };
-  handleSearch = event => {
-    //make websocket call here
-  };
-  doLogin = event => {
-    //make websocket call here
-  };
+
   render() {
     return (
       <div>
@@ -38,17 +33,17 @@ export default class MonitorForm extends React.Component {
             value={this.state.operation}
             onChange={this.handleChangeOperation}
           />
-        <input
+          <input
+            type="button"
+            name="login"
+            value="Login"
+            onClick={this.props.doLogin}
+          />
+          <input
             type="button"
             name="query"
             value="Query"
-            onClick={this.handleSearch}
-          />
-        <input
-            type="button"
-            name="refreshToken"
-            value="Refresh Token"
-            onClick={this.handleSearch}
+            onClick={this.props.doSearch}
           />
         </form>
       </div>
