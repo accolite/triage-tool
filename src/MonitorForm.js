@@ -14,6 +14,12 @@ export default class MonitorForm extends React.Component {
   handleChangeOperation = event => {
     this.setState({ operation: event.target.value });
   };
+  doSearch = event => {
+    return this.props.doSearch(event, {
+      owner: this.state.owner,
+      operation: this.state.operation,
+    });
+  }
 
   render() {
     return (

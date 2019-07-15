@@ -70,16 +70,17 @@ class App extends React.Component {
       showReqRes: false,
     });
   }
-  doSearch = async event => {
+  doSearch = async (event, obj) => {
     //make websocket call here
-    const accessToken = pathOr("", ["access_token"], loginResponse);
+    const access_token = pathOr("", ["access_token"], loginResponse);
+    const { operation, owner } = obj;
     const payload = {
-      "operation": this.state.operation,
-      "access_token": accessToken,
-      "body": {   
-        "name": "monitor",
-        "owner": this.state.owner,
-        "priority": 10,
+      operation: "createEvent",
+      access_token,
+      body: {   
+        name: "monitor",
+        owner: "shailendra@yopmail.com",
+        priority: 10,
       }
     };
     const searchResponse = await socketObject.sendData(payload);
