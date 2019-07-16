@@ -44,7 +44,7 @@ const socketObject = SocketHandlerFactory(
   null,
   makeStoreHelper(),
   {
-    PRU_API_URL: "wss://ws-apiuat.prudential.com.my/ws",
+    PRU_API_URL: "wss://ws-pacs-pulse-uat.prudential.com.sg/ws",
     PRU_API_KEY: "a3b0c44298fc1c149afbf4c8996fb92427ac41e4649b934ca495991b7852b855",
   }
 );
@@ -79,8 +79,7 @@ class App extends React.Component {
       access_token,
       body: {   
         name: "monitor",
-        owner: "shailendra@yopmail.com",
-        priority: 10,
+        owner,//: "shailendra14@yopmail.com",
       }
     };
     const searchResponse = await socketObject.sendData(payload);

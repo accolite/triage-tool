@@ -14,7 +14,7 @@ let URL_PATH;
 let API_KEY;
 
 const NO_RESPONSE_EVENTS = {
-  createEvent: true,
+  // createEvent: true,
 };
 
 /**

@@ -49,7 +49,7 @@ export default class MonitorForm extends React.Component {
             type="button"
             name="query"
             value="Query"
-            onClick={this.props.doSearch}
+            onClick={this.doSearch}
           />
         </form>
       </div>
