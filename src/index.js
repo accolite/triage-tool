@@ -44,7 +44,7 @@ const socketObject = SocketHandlerFactory(
   null,
   makeStoreHelper(),
   {
-    PRU_API_URL: "wss://ws-pacs-pulse-uat.prudential.com.sg/ws",
+    PRU_API_URL: "ws://278f7924.ngrok.io/ws",
     PRU_API_KEY: "a3b0c44298fc1c149afbf4c8996fb92427ac41e4649b934ca495991b7852b855",
   }
 );
@@ -79,11 +79,12 @@ class App extends React.Component {
       access_token,
       body: {   
         name: "monitor",
-        owner,//: "shailendra14@yopmail.com",
+        owner: "shailsguat0@yopmail.com",
+        priority: 10,
       }
     };
     const searchResponse = await socketObject.sendData(payload);
-    const { status, body } = searchResponse;
+    const { status, body } = searchResponse || {};
     if (status.code === 0) {
       this.setState({
         data: values(body)
@@ -100,8 +101,9 @@ class App extends React.Component {
     const payload = {
       "operation":"login",
       "body":{
-        "loginId": "shailendra@yopmail.com",
-        "password": "Password@123"
+        "realm": "google",
+        "loginId": "shailsguat0@yopmail.com",
+        "password": "347563821"
       }
     }
     loginResponse = await socketObject.sendData(payload);
@@ -135,7 +137,7 @@ class App extends React.Component {
             {
               Header: "Request Timestamp",
               id: "timestamprew",
-              accessor: d => d.requestMessage.timestamp,
+              accessor: d => pathOr("",["requestMessage", "timestamp"],d),
               filterMethod: (filter, rows) =>
                 matchSorter(rows, filter.value, { keys: ["lastName"] }),
               filterAll: true
@@ -143,7 +145,7 @@ class App extends React.Component {
             {
               Header: "Reply Timestamp",
               id: "timestampres",
-              accessor: d => d.replyMessage.timestamp,
+              accessor: d => pathOr("",["replyMessage", "timestamp"],d),
               filterMethod: (filter, rows) =>
                 matchSorter(rows, filter.value, { keys: ["lastName"] }),
               filterAll: true
@@ -151,7 +153,7 @@ class App extends React.Component {
             {
               Header: "Status",
               id: "status",
-              accessor: d => d.replyMessage.status.code,
+              accessor: d => pathOr("",["replyMessage","status","code"],d),
               filterMethod: (filter, rows) =>
                 matchSorter(rows, filter.value, { keys: ["lastName"] }),
               filterAll: true,

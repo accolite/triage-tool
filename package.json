@@ -7,6 +7,7 @@
   "dependencies": {
     "d3": "^3.5.17",
     "match-sorter": "1.8.1",
+    "moment": "^2.24.0",
     "namor": "1.0.1",
     "ramda": "^0.26.1",
     "react": "15.5.3",

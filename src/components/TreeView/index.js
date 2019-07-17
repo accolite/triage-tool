@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import * as d3 from "d3";
 import "./style.css";
+import moment from "moment";
 
 class TreeView extends Component {
 
@@ -193,7 +194,8 @@ class TreeView extends Component {
                 { name: "Operation", value: operation }, 
                 { name: "Status", value: status.code },
                 { name: "Request Timestamp", value: requestTimestamp },
-                { name: "Response Timestamp", value: replyTimestamp }];
+                { name: "Response Timestamp", value: replyTimestamp },
+                { name : "Duration", value: moment("2019-07-198T18:07:801Z",'YYYY-MM-DDDTHH:mm:sssZ')}];
             props.forEach(prop => {
                 html += "<tr><td>" + prop.name + "</td><td>" + prop.value + "</td></tr>"
             })

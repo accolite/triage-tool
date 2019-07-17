@@ -1,13 +1,13 @@
 .left-container {
     flex: 0 1 50%;
     padding: .5em;
-    height: 400px;
+    height: 600px;
     overflow: auto;
 }
 .right-container {
     flex: 0 1 50%;
     padding: .5em;
-    height: 400px;
+    height: 600px;
     overflow: auto;
 }
 .main-container {
